@@ -37,7 +37,7 @@ For more features, please refer to [Roadmap](https://github.com/spring-cloud-inc
 
 **[Dubbo](https://github.com/apache/incubator-dubbo)**：A high-performance, Java based open source RPC framework.
 
-**[Fescar](https://github.com/alibaba/fescar)**：A distributed transaction solution with high performance and ease of use for microservices architecture.
+**[Seata](https://github.com/seata/seata)**：A distributed transaction solution with high performance and ease of use for microservices architecture.
 
 **[Alibaba Cloud ACM](https://www.aliyun.com/product/acm)**：An application configuration center that enables you to centralize the management of application configurations, and accomplish real-time configuration push in a distributed environment.
 
@@ -121,8 +121,10 @@ Examples：
 
 [Alibaba Cloud OSS Example](https://github.com/spring-cloud-incubator/spring-cloud-alibaba/blob/master/spring-cloud-alibaba-examples/oss-example/readme.md)
 
+[Duboo Spring Cloud Example](https://github.com/spring-cloud-incubator/spring-cloud-alibaba/blob/master/spring-cloud-alibaba-examples/spring-cloud-alibaba-dubbo-examples/README_CN.md)
+
 ## Version control guidelines
-The version number of the project is in the form of x.x.x, where x is a number, starting from 0, and is not limited to the range 0~9. When the project is in the incubator phase, the first version number is fixed to 0, that is, the version number is 0.x.x.
+The version number of the project is in the form of x.x.x, where x is a number, starting from 0, and is not limited to the range 0~9. When the project is in the incubator phase, the version number is 0.x.x.
 
 As the interfaces and annotations of Spring Boot 1 and Spring Boot 2 have been changed significantly in the Actuator module, and spring-cloud-commons is also changed quite a lot from 1.x.x to 2.0.0, we maintain two different branches to support Spring Boot 1 and Spring Boot 2:
 * 0.1.x for Spring Boot 1

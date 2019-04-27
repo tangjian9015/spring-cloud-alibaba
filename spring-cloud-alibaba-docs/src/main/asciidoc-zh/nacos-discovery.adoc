@@ -11,38 +11,17 @@ Discovery Starter 也将服务实例自身的一些元数据信息-例如 host�
 
 ==== 如何引入 Nacos Discovery Starter
 
-为了能够在你的工程下引入 Nacos Discovey Starter，使用group ID 为 `org.springframework.cloud` 和 artifact ID 为 `spring-cloud-starter-alibaba-nacos-discovery`。
-pom.xml 示例如下所示：
+如果要在您的项目中使用 Nacos 来实现服务发现，使用 group ID 为 `org.springframework.cloud` 和 artifact ID 为 `spring-cloud-starter-alibaba-nacos-discovery` 的 starter。
 
 [source,xml,indent=0]
 ----
-<!-- dependency management-->
-<dependencyManagement>
-    <dependencies>
-        <dependency>
-            <groupId>org.springframework.cloud</groupId>
-            <artifactId>spring-cloud-alibaba-dependencies</artifactId>
-            <version>0.2.2.BUILD-SNAPSHOT</version>
-            <type>pom</type>
-            <scope>import</scope>
-        </dependency>
-    </dependencies>
-</dependencyManagement>
-
-<!-- dependencies -->
-<dependencies>
-    <dependency>
-        <groupId>org.springframework.cloud</groupId>
-        <artifactId>spring-cloud-starter-alibaba-nacos-discovery</artifactId>
-    </dependency>
-</dependencies>
+<dependency>
+    <groupId>org.springframework.cloud</groupId>
+    <artifactId>spring-cloud-starter-alibaba-nacos-discovery</artifactId>
+</dependency>
 ----
 
 ==== 启动一个 Provider 应用
-
-如果您使用的 Spring Cloud 版本是 Finchley.SR1 版本,那么这个时候您的Spring Boot版本的选择可需要额外的小心了，因为版本的不匹对，可能会导致许多意外的效果。
-Spring Cloud 的 Finchley.SR1 版本最佳实践的 Spring Boot 版本是 2.0.6.RELEASE。在启动您的一个 Provider 应用时请检查依赖的 Spring Boot 版本是否是
-1.X.Y.RELEASE 或者 2.1.0.RELEASE 的版本。如果不是，请更正到 2.0.6.RELEASE 版本。
 
 以下步骤向您展示了如何将一个服务注册到 Nacos。
 
@@ -62,7 +41,7 @@ Spring Cloud 的 Finchley.SR1 版本最佳实践的 Spring Boot 版本是 2.0.6.
     <parent>
         <groupId>org.springframework.boot</groupId>
         <artifactId>spring-boot-starter-parent</artifactId>
-        <version>2.0.6.RELEASE</version>
+        <version>${spring.boot.version}</version>
         <relativePath/>
     </parent>
 
@@ -77,14 +56,14 @@ Spring Cloud 的 Finchley.SR1 版本最佳实践的 Spring Boot 版本是 2.0.6.
             <dependency>
                 <groupId>org.springframework.cloud</groupId>
                 <artifactId>spring-cloud-dependencies</artifactId>
-                <version>Finchley.SR1</version>
+                <version>${spring.cloud.version}</version>
                 <type>pom</type>
                 <scope>import</scope>
             </dependency>
             <dependency>
                 <groupId>org.springframework.cloud</groupId>
                 <artifactId>spring-cloud-alibaba-dependencies</artifactId>
-                <version>0.2.2.BUILD-SNAPSHOT</version>
+                <version>${spring.cloud.alibaba.version}</version>
                 <type>pom</type>
                 <scope>import</scope>
             </dependency>
@@ -155,7 +134,7 @@ public class NacosProviderDemoApplication {
 
 这个时候你就可以在 Nacos的控制台上看到注册上来的服务信息了。
 
-NOTE: 再启动 Provider 应用之前 请先将 Nacos 服务启动。具体启动方式可参考 https://nacos.io/zh-cn/docs/quick-start.html[Naco 官网]。
+NOTE: 再启动 Provider 应用之前 请先将 Nacos 服务启动。具体启动方式可参考 https://nacos.io/zh-cn/docs/quick-start.html[Nacos 官网]。
 
 === 服务的 EndPoint
 
@@ -261,9 +240,9 @@ public class NacosConsumerApp {
         public String echoAppName(){
             //使用 LoadBalanceClient 和 RestTemolate 结合的方式来访问
             ServiceInstance serviceInstance = loadBalancerClient.choose("nacos-provider");
-            String path = String.format("http://%s:%s/echo/%s",serviceInstance.getHost(),serviceInstance.getPort(),appName);
-            System.out.println("request path:"+path);
-            return restTemplate.getForObject(path,String.class);
+            String url = String.format("http://%s:%s/echo/%s",serviceInstance.getHost(),serviceInstance.getPort(),appName);
+            System.out.println("request url:"+url);
+            return restTemplate.getForObject(url,String.class);
         }
 
     }
@@ -311,6 +290,7 @@ NOTE: 在启动 Consumer 应用之前请先将 Nacos 服务启动好。具体启
 |`SecretKey`|`spring.cloud.nacos.discovery.secret-key`|`无`|`当要上阿里云时，阿里云上面的一个云账号密码`
 |`Metadata`|`spring.cloud.nacos.discovery.metadata`|`无`|`使用Map格式配置，用户可以根据自己的需要自定义一些和服务相关的元数据信息`
 |`日志文件名`|`spring.cloud.nacos.discovery.log-name`|`无`|
+|`集群`|`spring.cloud.nacos.discovery.cluster-name`|`DEFAULT`|`配置成Nacos集群名称`
 |`接入点`|`spring.cloud.nacos.discovery.enpoint`|`UTF-8`|`地域的某个服务的入口域名，通过此域名可以动态地拿到服务端地址`
 |`是否集成Ribbon`|`ribbon.nacos.enabled`|`true`|`一般都设置成true即可`
 |====

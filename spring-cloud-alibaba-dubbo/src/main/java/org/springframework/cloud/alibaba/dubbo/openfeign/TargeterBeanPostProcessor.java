@@ -25,7 +25,9 @@ import org.springframework.cloud.alibaba.dubbo.service.DubboGenericServiceFactor
 import org.springframework.core.env.Environment;
 
 import static java.lang.reflect.Proxy.newProxyInstance;
+import static org.springframework.cloud.alibaba.dubbo.autoconfigure.DubboOpenFeignAutoConfiguration.TARGETER_CLASS_NAME;
 import static org.springframework.util.ClassUtils.getUserClass;
+import static org.springframework.util.ClassUtils.isPresent;
 import static org.springframework.util.ClassUtils.resolveClassName;
 
 /**
@@ -34,8 +36,6 @@ import static org.springframework.util.ClassUtils.resolveClassName;
  * @author <a href="mailto:mercyblitz@gmail.com">Mercy</a>
  */
 public class TargeterBeanPostProcessor implements BeanPostProcessor, BeanClassLoaderAware {
-
-    private static final String TARGETER_CLASS_NAME = "org.springframework.cloud.openfeign.Targeter";
 
     private final Environment environment;
 
@@ -64,12 +64,14 @@ public class TargeterBeanPostProcessor implements BeanPostProcessor, BeanClassLo
 
     @Override
     public Object postProcessAfterInitialization(final Object bean, String beanName) throws BeansException {
-        Class<?> beanClass = getUserClass(bean.getClass());
-        Class<?> targetClass = resolveClassName(TARGETER_CLASS_NAME, classLoader);
-        if (targetClass.isAssignableFrom(beanClass)) {
-            return newProxyInstance(classLoader, new Class[]{targetClass},
-                    new TargeterInvocationHandler(bean, environment, dubboServiceMetadataRepository,
-                            dubboGenericServiceFactory,contextFactory));
+        if (isPresent(TARGETER_CLASS_NAME, classLoader)) {
+            Class<?> beanClass = getUserClass(bean.getClass());
+            Class<?> targetClass = resolveClassName(TARGETER_CLASS_NAME, classLoader);
+            if (targetClass.isAssignableFrom(beanClass)) {
+                return newProxyInstance(classLoader, new Class[]{targetClass},
+                        new TargeterInvocationHandler(bean, environment, classLoader, dubboServiceMetadataRepository,
+                                dubboGenericServiceFactory, contextFactory));
+            }
         }
         return bean;
     }
